@@ -22,7 +22,7 @@ export class UserEntity {
   username: string
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     unique: true,
     comment: '邮件',
   })

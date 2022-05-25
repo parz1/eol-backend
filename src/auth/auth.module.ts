@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { UserModule } from 'src/user/user.module'
@@ -11,8 +11,8 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 @Module({
   imports: [
+    forwardRef(() => UserModule),
     ConfigModule,
-    UserModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

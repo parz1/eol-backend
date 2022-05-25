@@ -1,0 +1,12 @@
+app:
+  PORT: 1205
+  JWTCONSTANT: 'eol.test'
+  JWTEXPIREDTIME: 24000
+
+db:
+  mysql:
+    HOST: 'localhost'
+    PORT: 3306
+    DATABASE: 'eol-db'
+    USERNAME: 'root'
+    PASSWORD: 'yFiL%.Sb*mK6:AK?'

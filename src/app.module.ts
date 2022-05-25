@@ -5,9 +5,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import configuration from '../config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { UserModule } from './user/user.module'
-import { AuthModule } from './auth/auth.module'
 import { LoggerMiddleware } from './utils/middleware/logger.middleware'
 import { BullModule } from '@nestjs/bull'
+import { AuthModule } from './auth/auth.module'
+import { LibraryModule } from './library/library.module';
 
 @Module({
   imports: [
@@ -28,14 +29,19 @@ import { BullModule } from '@nestjs/bull'
       }),
       inject: [ConfigService],
     }),
-    BullModule.forRoot({
-      redis: {
-        host: 'localhost',
-        port: 6379,
-      },
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        redis: {
+          host: configService.get('db.redis.HOST'),
+          port: configService.get('db.redis.PORT'),
+        },
+      }),
+      inject: [ConfigService],
     }),
-    UserModule,
     AuthModule,
+    UserModule,
+    LibraryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
