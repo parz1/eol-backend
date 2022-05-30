@@ -8,7 +8,8 @@ import { UserModule } from './user/user.module'
 import { LoggerMiddleware } from './utils/middleware/logger.middleware'
 import { BullModule } from '@nestjs/bull'
 import { AuthModule } from './auth/auth.module'
-import { LibraryModule } from './library/library.module';
+import { LibraryModule } from './library/library.module'
+import { QuestionModule } from './question/question.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { LibraryModule } from './library/library.module';
     AuthModule,
     UserModule,
     LibraryModule,
+    QuestionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

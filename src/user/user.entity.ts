@@ -1,7 +1,11 @@
+import { Exclude, Expose } from 'class-transformer'
+import { LibraryEntity } from 'src/library/library.entity'
+import { QuestionEntity } from 'src/question/question.entity'
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
@@ -31,8 +35,17 @@ export class UserEntity {
   @Column('varchar', {
     nullable: false,
     comment: '密码',
+    select: false,
   })
   password: string
+
+  @OneToMany(() => LibraryEntity, (library) => library.user, { eager: false })
+  libraries: LibraryEntity[]
+
+  @OneToMany(() => QuestionEntity, (question) => question.user, {
+    eager: false,
+  })
+  questions: QuestionEntity[]
 
   @CreateDateColumn({
     type: 'timestamp',

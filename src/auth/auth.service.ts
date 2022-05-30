@@ -20,8 +20,8 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name, true)
 
   async validateUser(username: string, password: string): Promise<any> {
-    this.logger.verbose({ username, password })
-    const user = await this.userService.findOne(username)
+    // this.logger.verbose({ username, password })
+    const user = await this.userService.getPassword(username)
     console.log(user)
     if (user && user.password === password) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

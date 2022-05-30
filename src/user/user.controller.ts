@@ -1,5 +1,6 @@
 import { InjectQueue } from '@nestjs/bull'
 import {
+  BadRequestException,
   Body,
   Controller,
   ForbiddenException,
@@ -11,8 +12,11 @@ import {
 } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { Queue } from 'bull'
+import { Transform, Type } from 'class-transformer'
 import { AuthService } from 'src/auth/auth.service'
+import { GetUser } from 'src/auth/get-user.decorator'
 import { AuthCredentialsDto } from './dto/auth-credentials.dto'
+import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
 
 @Controller('user')
@@ -27,9 +31,16 @@ export class UserController {
     })
   }
 
-  @Get(':id')
+  @Get('/:id')
   async findOne(@Param('id') id: string) {
-    throw new ForbiddenException('user', 'not my fault')
+    if (!Number.isInteger(Number(id)))
+      throw new BadRequestException('/:id not integer')
+    return this.userService.findOne(Number(id))
+  }
+
+  @Get('info')
+  async getUserInfo(@GetUser() _user: UserEntity) {
+    return _user
   }
 
   @UseGuards(AuthGuard('local'))
