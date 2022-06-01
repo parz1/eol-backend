@@ -4,9 +4,11 @@ import { UserEntity } from 'src/user/user.entity'
 import {
   EntityManager,
   EntityRepository,
+  getManager,
   Repository,
   Transaction,
   TransactionManager,
+  TransactionRepository,
 } from 'typeorm'
 import { CreateQuestionDto } from './dto/create-question.dto'
 import { GetQuestionsFilterDto } from './dto/get-questions-filter.dto'
@@ -59,24 +61,39 @@ export class QuestionRepository extends Repository<QuestionEntity> {
     }
   }
 
-  @Transaction({ isolation: 'SERIALIZABLE' })
-  async createQuestion(
-    @TransactionManager() manager: EntityManager,
-    createQuestionDto: CreateQuestionDto,
-    user: UserEntity,
-  ) {
+  async createQuestion(createQuestionDto: CreateQuestionDto, user: UserEntity) {
     // const { name, note, tags } = createQuestionDto
-    const _options = this.optionRepository.create(createQuestionDto.options)
-    const options = await this.optionRepository.save(_options)
 
-    const { options: op, ..._createQuestionDto } = createQuestionDto
+    const { options: createOptionDtoArray, ..._createQuestionDto } =
+      createQuestionDto
     const question = this.create({
       ..._createQuestionDto,
       user,
     })
-
+    console.log(createOptionDtoArray )
+    const _options = this.optionRepository.create(
+      createOptionDtoArray.map(
+        (e) =>
+          ({
+            question: question,
+            ...e,
+          } as OptionEntity),
+      ),
+    )
+    // await this.tSave(this, question)
+    // await this.tSave(this, _options)
+    console.log(question, _options)
     await this.save(question)
+    await this.save(_options)
 
     return question
+  }
+
+  @Transaction()
+  async tSave(
+    @TransactionRepository(this) repository: QuestionRepository,
+    object,
+  ) {
+    return repository.save(object)
   }
 }

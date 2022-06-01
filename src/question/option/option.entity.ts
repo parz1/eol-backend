@@ -30,7 +30,7 @@ export class OptionEntity extends BaseEntity {
   })
   type: string
 
-  @ManyToOne(() => QuestionEntity, (question) => question.option, {
+  @ManyToOne(() => QuestionEntity, (question) => question.options, {
     eager: false,
   })
   @Exclude({ toPlainOnly: true })

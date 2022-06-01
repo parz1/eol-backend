@@ -1,5 +1,5 @@
 import { IsNotEmpty, IsOptional, MaxLength, MinLength } from 'class-validator'
-import { OptionEntity } from '../option/option.entity'
+import { CreateOptionDto } from './create-option.dto'
 
 export class CreateQuestionDto {
   @IsNotEmpty()
@@ -16,5 +16,5 @@ export class CreateQuestionDto {
   @IsOptional()
   tags?: string
 
-  options?: OptionEntity[]
+  options?: CreateOptionDto[]
 }
